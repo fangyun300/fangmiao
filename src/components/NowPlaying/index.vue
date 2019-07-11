@@ -1,7 +1,7 @@
 <template>
 	<div class="movie_body">
 		<ul>
-			<li>
+			<!-- <li>
 				<div class="pic_show"><img src="/images/1.jpg"></div>
 				<div class="info_list">
 					<h2>蜘蛛侠：英雄远征 （Spider-Man: Far From Home）</h2>
@@ -10,14 +10,14 @@
 					<p>类型：动作,冒险,科幻</p>
 				</div>
 				<div class="btn_mall">购票</div>
-			</li>
-			<li>
-				<div class="pic_show"><img src="/images/2.jpg"></div>
+			</li> -->
+			<li v-for="(item, index) in movieList" :key="index">
+				<div class="pic_show"><img :src="item.img | setWH('120.180')"></div>
 				<div class="info_list">
-					<h2>千与千寻 （千と千尋の神隠し</h2>
-					<p>导演：宫崎骏</p>
-					<p>主演：周冬雨,柊瑠美,井柏然,入野自由,彭昱畅,中村彰男,田壮壮,菅原文太,王琳,夏木真理,内藤刚志</p>
-					<p>类型：动画,冒险,奇幻,家庭</p>
+					<h2>{{ item.nm }}<img v-if="item.version" src="@/assets/maxs.png"></h2>
+					<p>观众评分:<span class="grade">{{ item.sc }}</span></p>
+					<p>主演：{{ item.star }}</p>
+					<p>{{ item.showInfo }}</p>
 				</div>
 				<div class="btn_mall">购票</div>
 			</li>
@@ -26,7 +26,20 @@
 </template>
 <script>
 	export default{
-		name:'nowplaying'
+		name:'nowplaying',
+		data(){
+				return {
+					movieList:[]
+				}
+		},
+		mounted(){
+			this.axios.get('/api/movieOnInfoList?cityId=10').then((res) => {
+				var msg = res.data.msg
+				if(msg === 'ok'){
+						this.movieList = res.data.data.movieList
+				}
+			});
+		}
 	}
 </script>
 <style scoped>

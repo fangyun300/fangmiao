@@ -3,42 +3,27 @@
 		<div class="search_input">
 			<div class="search_input_wrapper">
 				<i class="iconfont icon-sousuo"></i>
-				<input type="text">
+				<input type="text" v-model="message">
 			</div>
 		</div>
 		<div class="search_result">
 			<h3>电影/电视剧/综艺</h3>
 			<ul>
-				<li>
+				<!-- <li>
 					<div class="img"><img src="/images/1.jpg"></div>
 					<div class="info">
 						<p><span>蜘蛛侠：英雄远征</span><span>8.5</span></p>
 						<p>导演：乔·沃茨</p>
 						<p>主演：汤姆·赫兰德,杰克·吉伦哈尔,塞缪尔·杰克逊,赞达亚·科尔曼,玛丽莎·托梅,迈克尔·基顿,雅各布·巴特朗</p>
 					</div>
-				</li>
-				<li>
-					<div class="img"><img src="/images/2.jpg"></div>
+				</li> -->
+				<li v-for="(item, index) in moviesList" :key="index">
+					<div class="img"><img :src="item.img | setWH('120.180')"></div>
 					<div class="info">
-						<p><span>千与千寻 （千と千尋の神隠し</span><span>9.6</span></p>
-						<p>导演：宫崎骏</p>
-						<p>主演：周冬雨,柊瑠美,井柏然,入野自由,彭昱畅,中村彰男,田壮壮,菅原文太,王琳,夏木真理,内藤刚志</p>
-					</div>
-				</li>
-				<li>
-					<div class="img"><img src="/images/3.jpg"></div>
-					<div class="info">
-						<p><span>他她他她</span><span>未评分</span></p>
-						<p>上映时间：2019-07-05</p>
-						<p>主演：范文芳,李铭顺,戚玉武,姬他,卢洋洋,希童</p>
-					</div>
-				</li>
-				<li>
-					<div class="img"><img src="/images/4.jpg"></div>
-					<div class="info">
-					<p><span>爱宠大机密2</span><span>未评分</span></p>
-					<p>上映时间：2019-07-05</p>
-					<p>主演：冯绍峰,帕顿·奥斯瓦尔特,陈佩斯,凯文·哈特,冯小刚,哈里森·福特,郭采洁,珍妮·斯蕾特,马丽,蒂凡尼·哈迪斯</p>
+						<p><span>{{ item.nm }}</span><span>评分：{{ item.sc }}</span></p>
+						<p>{{ item.enm }}</p>
+						<p>{{ item.cat }}</p>
+						<p>{{ item.rt }}</p>
 					</div>
 				</li>
 			</ul>
@@ -47,7 +32,40 @@
 </template>
 <script>
 	export default{
+		name:'search',
+		data(){
+			return {
+				message:'',
+				moviesList:[],
+				cancel:null
+			}
+		},
+		watch:{
+			message(val){
+				// 如果存在上一次请求，则取消上一次请求
+				if(this.cancel){
+					this.cancel();
+				}
 
+				// 定义CancelToken，它是axios的一个属性，且是一个构造函数
+				let CancelToken = this.axios.CancelToken;
+
+				// 使用axios的get方法获取请求结果，在请求时需要传入cancelToken参数，
+				// 实例化一个CancelToken，实例化后会生成一个类似于id的请求令牌，将它赋值给全局的cancel变量。
+				this.axios.get(('/api/searchList?cityId=10&kw=' + val),{
+					cancelToken: new CancelToken((c) => {
+						this.cancel = c;
+					})
+				}).then((res) => {
+					var msg = res.data.msg;
+					var movies = res.data.data.movies;
+					if(msg && movies){
+						this.moviesList = res.data.data.movies.list
+						console.log(this.moviesList)
+					}
+				});
+			}
+		}
 	}
 </script>
 <style scoped>

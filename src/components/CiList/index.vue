@@ -1,32 +1,21 @@
 <template>
 	<div class="cinema_body">
 		<ul>
-			<li>
+			<li v-for="(item, index) in cinemas" :key="item.id">
 				<div>
-					<span>徐氏杜比MAX影城</span>
-					<span class="q"><span class="price">34.9</span>元起</span>
+					<span>{{ item.nm }}</span>
+					<span class="q"><span class="price">{{ item.sellPrice }}</span>元起</span>
 				</div>
 				<div class="address">
-					<span>婺城区八一南街与环城南路交叉口印象城大润发三楼徐氏影城</span>
-					<span>联系电话：0579-82583571</span>
+					<span>{{ item.addr }}</span>
+					<span>{{ item.distance }}</span>
 				</div>
-				<div class="card">
+				<!-- <div class="card">
 					<div>小吃</div>
 					<div>折扣卡</div>
-				</div>
-			</li>
-			<li>
-				<div>
-					<span>金华时代国际影城</span>
-					<span class="q"><span class="price">33.4</span>元起</span>
-				</div>
-				<div class="address">
-					<span>婺城区李渔路888号世贸中心B座5楼（兰溪街步行街观光电梯直达5楼）</span>
-					<span>联系电话：0579-89161788</span>
-				</div>
+				</div> -->
 				<div class="card">
-					<div>小吃</div>
-					<div>折扣卡</div>
+					<div v-for="(num, key) in item.tag" :key="key" v-if="num === 1" :class="key | classCard">{{ key | formatCard }}</div>
 				</div>
 			</li>
 		</ul>
@@ -34,7 +23,51 @@
 </template>
 <script>
 	export default{
-		name:'cilist'
+		name:'cilist',
+		data(){
+			return {
+				cinemas:[]
+			}
+		},
+		mounted(){
+			this.axios.get('/api/cinemaList?cityId=10').then((res) => {
+				var msg = res.data.msg;
+				if(msg === 'ok'){
+					this.cinemas = res.data.data.cinemas;
+				}
+				console.log(this.cinemas)
+			})
+		},
+		filters:{
+			formatCard(key){
+				var card = [
+					{key:'allowRefund', value:'改签'},
+					{key:'endorse', value:'退'},
+					{key:'sell', value:'折扣卡'},
+					{key:'snack', value:'小吃'}
+				]
+				for(let i=0; i<card.length; i++){
+					if(card[i].key === key){
+						return card[i].value
+					}
+				}
+				return ''
+			},
+			classCard(key){
+				var card = [
+					{key:'allowRefund', value:'bl'},
+					{key:'endorse', value:'bl'},
+					{key:'sell', value:'or'},
+					{key:'snack', value:'or'}
+				]
+				for(let i=0; i<card.length; i++){
+					if(card[i].key === key){
+						return card[i].value
+					}
+				}
+				return ''
+			}
+		}
 	}
 </script>
 <style scoped>
@@ -51,7 +84,7 @@
 	display: -ms-flex;
 	display: -o-flex;
 	display: flex;}
-	.cinema_body .card div{padding: 0 3px; height: 15px; line-height: 15px; border-radius: 2px; color: #f90; border:1px solid #f90; font-size: 13px;}
+	.cinema_body .card div{padding: 0 3px; height: 15px; line-height: 15px; border-radius: 2px; color: #f90; border:1px solid #f90; font-size: 13px; margin: 2px;}
 	.cinema_body .card div.or{color: #f90; border:1px solid #f90;}
 	.cinema_body .card div.bl{color: #589daf; border:1px solid #589daf;}
 </style>

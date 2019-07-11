@@ -1,23 +1,13 @@
 <template>
 	<div class="movie_body">
 		<ul>
-			<li>
-				<div class="pic_show"><img src="/images/3.jpg"></div>
+			<li v-for="(item, index) in comingList" :key="index">
+				<div class="pic_show"><img :src="item.img | setWH('120.180')"></div>
 				<div class="info_list">
-					<h2>他她他她</h2>
-					<p>上映时间：2019-07-05</p>
-					<p>主演：范文芳,李铭顺,戚玉武,姬他,卢洋洋,希童</p>
-					<p>剧情介绍：三年前的一场车祸，改变了所有人的命运。随着车祸肇事者的出狱，所有当事人都不得不面对残酷的真相，并审视自己的内心。复仇还是救赎？善念还是贪欲？都在人性的一念之间。</p>
-				</div>
-				<div class="btn_pre">预售</div>
-			</li>
-			<li>
-				<div class="pic_show"><img src="/images/4.jpg"></div>
-				<div class="info_list">
-					<h2>爱宠大机密2 （The Secret Life of Pets 2）</h2>
-					<p>上映时间：2019-07-05</p>
-					<p>主演：冯绍峰,帕顿·奥斯瓦尔特,陈佩斯,凯文·哈特,冯小刚,哈里森·福特,郭采洁,珍妮·斯蕾特,马丽,蒂凡尼·哈迪斯</p>
-					<p>导演：克里斯·雷纳德 主演：冯绍峰,帕顿·奥斯瓦尔特,陈佩斯,凯文·哈特,冯小刚,哈里森·福特,郭采洁,珍妮·斯蕾特,马丽,蒂凡尼·哈迪斯 类型：动作,冒险,喜剧 制片国家/地区：美国 片长：86分钟 剧情介绍：《爱宠大机密2》将延续2016年夏天轰动一时的《爱宠大机密》的故事，讲述宠物在我们每天离家工作或上学后的生活。照明娱乐创始人兼首席执行官克里斯·梅勒丹德利和他长久以来的合作伙伴珍娜·海莉将共同制作这部续集。</p>
+					<h2>{{ item.nm }}<img v-if="item.version" src="@/assets/maxs.png"></h2>
+					<p>{{ item.wish }}人想看</p>
+					<p>主演：{{ item.star }}</p>
+					<p>{{ item.rt }}上映</p>
 				</div>
 				<div class="btn_pre">预售</div>
 			</li>
@@ -26,7 +16,20 @@
 </template>
 <script>
 	export default{
-		name:'commingsoon'
+		name:'commingsoon',
+		data(){
+			return {
+				comingList:[]
+			}
+		},
+		mounted(){
+			this.axios.get('/api/movieComingList?cityId=10').then((res) => {
+				var msg = res.data.msg;
+				if(msg === 'ok'){
+					this.comingList = res.data.data.comingList
+				}
+			})
+		}
 	}
 </script>
 <style scoped>
