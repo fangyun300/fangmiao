@@ -52,7 +52,9 @@
 
 				// 使用axios的get方法获取请求结果，在请求时需要传入cancelToken参数，
 				// 实例化一个CancelToken，实例化后会生成一个类似于id的请求令牌，将它赋值给全局的cancel变量。
-				this.axios.get(('/api/searchList?cityId=10&kw=' + val),{
+				var cityId = this.$store.state.city.id 
+
+				this.axios.get(('/api/searchList?cityId='+cityId+'&kw=' + val),{
 					cancelToken: new CancelToken((c) => {
 						this.cancel = c;
 					})
@@ -61,7 +63,6 @@
 					var movies = res.data.data.movies;
 					if(msg && movies){
 						this.moviesList = res.data.data.movies.list
-						console.log(this.moviesList)
 					}
 				});
 			}
@@ -69,7 +70,10 @@
 	}
 </script>
 <style scoped>
-#content .search_body{flex:1; overflow: auto;}
+#content .search_body{flex: 1;
+  padding: 0 10px;
+  margin-top: 80px;
+  margin-bottom: 60px;}
 	.search_body .search_input{padding: 8px 10px; background-color: #f5f5f5; border-bottom:1px solid #e5e5e5;}
 	.search_body .search_input_wrapper{padding: 0 10px; border:1px solid #e6e6e6; border-radius: 5px; background: #fff; display: -webkit-flex;
 	display: -moz-flex;

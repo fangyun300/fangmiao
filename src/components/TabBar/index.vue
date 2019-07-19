@@ -22,7 +22,7 @@
 	}
 </script>
 <style scoped>
-	#footer{width: 100%; height: 50px; background: #fff; border-top: 2px solid #ebe8e3; position: fixed; left: 0; bottom: 0;}
+	#footer{width: 100%; height: 50px; background: #fff; border-top: 2px solid #ebe8e3; position: fixed; left: 0; bottom: 0; z-index: 2}
 	#footer ul{display: -webkit-flex;
 	display: -moz-flex;
 	display: -ms-flex;
