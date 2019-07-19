@@ -30,9 +30,25 @@
 	}
 </script>
 <style scoped>
-	#content .cinema_menu{width: 100%; height: 45px; border-bottom:1px solid #e6e6e6; display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: -o-flex;
-	display: flex; justify-content: space-around; align-items: center;}
+	#content .cinema_menu{overflow: hidden;
+    position: fixed;
+    top: 40px;
+    left: 0;
+    height: 40px;
+    z-index: 999;
+    background-color: #fff;
+    width: 100%;
+    overflow: hidden;}
+    #content .cinema_menu > div{
+    	float: left;
+    width: 33%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 15px;
+    color: #444;
+    font-weight: 500;
+    text-align: center;
+    padding: 0 10px;
+    box-sizing: border-box;
+    }
 </style>
