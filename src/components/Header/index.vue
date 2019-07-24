@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<header id="header">
-			<h1>{{title}}</h1>
+			<h1><slot></slot>{{title}}</h1>
 		</header>
 	</div>
 </template>
